@@ -9,7 +9,7 @@ namespace PhoneBook_Core
 {
     public class PhoneBookService
     {
-        
+        //Метод добавления абонента
         public void AddAbonent(Abonent abonent)
         {
             var db = new PhoneBookContext();
@@ -17,6 +17,7 @@ namespace PhoneBook_Core
             db.SaveChanges();
         }
 
+        //Методы удаления абонента
         public void DeleteAbonent(Abonent abonent)
         {
             DeleteAbonent(abonent.Id);
@@ -33,6 +34,7 @@ namespace PhoneBook_Core
             }
         }
 
+        //Метод изменения абонента
         public void ModifyAbonent(int abonentId, Abonent abonent)
         {
             var db = new PhoneBookContext();
@@ -44,12 +46,15 @@ namespace PhoneBook_Core
             db.SaveChanges();
         }
 
+        //Метод формирования списка абонентов
         public IEnumerable<Abonent> GetPeople()
         {
             var db = new PhoneBookContext();
             return db.People.Include("Category").Include("City");   
         }
 
+
+        //Метод поиска
         public IEnumerable<Abonent> SearchAbonent(string s)
         {
             var db = new PhoneBookContext();
@@ -80,18 +85,16 @@ namespace PhoneBook_Core
             return GetPeople();
         }
 
-        public IEnumerable<Category> GetCategories()
-        {
-            var db = new PhoneBookContext();
-            return db.Categories.Include("People");
-        }
 
+        //Метод очистки справочника (удаление БД)
         public void DeleteDb()
         {
             var db = new PhoneBookContext();
             db.Database.Delete();
         }
 
+
+        //Метод вывода списка абонентов на экран
         public void ListAbonents()
         {
             foreach (var a in GetPeople())

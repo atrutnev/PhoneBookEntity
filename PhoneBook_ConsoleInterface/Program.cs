@@ -13,9 +13,9 @@ namespace PhoneBook_ConsoleInterface
         static void Main(string[] args)
         {
             var service = new PhoneBookService();
-            //service.DeleteDb();
             while (true)
             {
+                //Шапка
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine((new string('=', 79)));
@@ -40,6 +40,7 @@ namespace PhoneBook_ConsoleInterface
                 //Команды меню
                 switch (com)
                 {
+                    //Создать запись
                     case "1":
                         Console.WriteLine("Введите имя: ");
                         string Name = Console.ReadLine();
@@ -52,12 +53,14 @@ namespace PhoneBook_ConsoleInterface
                         service.AddAbonent(new Abonent{ Name = Name, phoneNumber = phoneNumber, Category = category, City = city } );
                         break;
 
+                    //Удалить запись
                     case "2":
                         Console.WriteLine("Введите Id абонета: ");
                         int abonentId = int.Parse(Console.ReadLine());
                         service.DeleteAbonent(abonentId);
                         break;
 
+                    //Изменить запись
                     case "3":
                         Console.WriteLine("Введите Id абонета: ");
                         int Id = int.Parse(Console.ReadLine());
@@ -72,6 +75,7 @@ namespace PhoneBook_ConsoleInterface
                         service.ModifyAbonent(Id, new Abonent { Name = newName, phoneNumber = newPhoneNumber, Category = newCategory, City = newCity });
                         break;
 
+                    //Поиск
                     case "4":
                         Console.WriteLine("Введите часть имени абонента или номер: ");
                         string s = Console.ReadLine();                      
@@ -93,10 +97,12 @@ namespace PhoneBook_ConsoleInterface
                         Console.ReadKey();
                         break;
 
+                    //Очистить справочник
                     case "5":
                         service.DeleteDb();
                         break;
 
+                    //Выход
                     case "6":
                         return;
                         default:
