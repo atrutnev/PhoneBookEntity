@@ -12,28 +12,18 @@ namespace PhoneBook_Core
         
         public void AddAbonent(Abonent abonent)
         {
-            Console.WriteLine("Введите имя: ");
-            string Name = Console.ReadLine();
-            Console.WriteLine("Введите номер: ");
-            int phoneNumber = int.Parse(Console.ReadLine());
-            Console.WriteLine("Введите группу: ");
-            var categoryname = new Category { Name = Console.ReadLine() };
-            Console.WriteLine("Введите город: ");
-            var namecity = new City { Name = Console.ReadLine() };
             var db = new PhoneBookContext();
-            db.People.Add(new Abonent { Name = Name, phoneNumber = phoneNumber, Category = categoryname, City = namecity  });
+            db.People.Add(abonent);
             db.SaveChanges();
         }
 
-        //public void DeleteAbonent(Abonent abonent)
-        //{
-        //    DeleteAbonent(abonent.Id);
-        //}
-
-        public void DeleteAbonent()
+        public void DeleteAbonent(Abonent abonent)
         {
-            Console.WriteLine("Введите Id абонета: ");
-            int abonentId = int.Parse(Console.ReadLine());
+            DeleteAbonent(abonent.Id);
+        }
+
+        public void DeleteAbonent(int abonentId)
+        {
             var db = new PhoneBookContext();
             var abonent = db.People.SingleOrDefault(p => p.Id == abonentId);
             if (abonent != null)
@@ -43,25 +33,51 @@ namespace PhoneBook_Core
             }
         }
 
+        public void ModifyAbonent(int abonentId, Abonent abonent)
+        {
+            var db = new PhoneBookContext();
+            var oldAbonent = db.People.Single(p => p.Id == abonentId);
+            oldAbonent.Name = abonent.Name;
+            oldAbonent.phoneNumber = abonent.phoneNumber;
+            oldAbonent.Category = abonent.Category;
+            oldAbonent.City = abonent.City;
+            db.SaveChanges();
+        }
+
         public IEnumerable<Abonent> GetPeople()
         {
             var db = new PhoneBookContext();
             return db.People.Include("Category").Include("City");   
         }
 
-        public IEnumerable<Abonent> GetPeople(string s)
-        {
-            var db = new PhoneBookContext();
-            var q = db.People.Where(p => p.Name.Contains(s)).Include("Category").Include("City");
-            return q;
-        }
-
         public IEnumerable<Abonent> SearchAbonent(string s)
         {
             var db = new PhoneBookContext();
-            var q = db.People.Where(p => p.Name.Contains(s)).Include("Category").Include("City");
-            return q;
-
+            if (s != null)
+            {
+                foreach (var c in s)
+                {
+                    //Если введены буквы, то поиск производится по имени абонента. 
+                    if (char.IsLetter(c))
+                    {
+                        var q = db.People.Where(p => p.Name.Contains(s)).Include("Category").Include("City");
+                        return q;
+                    }
+                    //Если введены цифры, то поиск производится по номеру абонента.
+                    else if (char.IsDigit(c))
+                    {
+                        var number = int.Parse(s);
+                        var q = db.People.Where(p => p.phoneNumber.Equals(number)).Include("Category").Include("City");
+                        return q;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Не удалось распознать поисковый запрос!");
+                        break;
+                    }
+                }
+            }
+            return GetPeople();
         }
 
         public IEnumerable<Category> GetCategories()

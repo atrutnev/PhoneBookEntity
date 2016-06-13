@@ -21,15 +21,15 @@ namespace PhoneBook_ConsoleInterface
                 Console.WriteLine((new string('=', 79)));
                 Console.WriteLine("\t\tПростой консольный справочник на C#");
                 Console.WriteLine((new string('=', 79)));
+                Console.WriteLine("\t\tКоличество абонентов в справочнике - {0}", service.GetPeople().Count());
                 Console.WriteLine("\n");
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Количество абонентов в справочнике - {0}", service.GetPeople().Count());
                 service.ListAbonents();
                 Console.WriteLine("\n");
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine((new string('=', 79)));
                 Console.WriteLine("Команды меню: ");
-                Console.WriteLine("1.Создать запись\n2.Удалить запись\n3.Изменить запись\n4.Поиск\n5.Сохранить список и выйти\n6.Выход без сохранения");
+                Console.WriteLine("1.Создать запись\n2.Удалить запись\n3.Изменить запись\n4.Поиск\n5.Очистить справочник\n6.Выход");
                 Console.WriteLine((new string('=', 79)));
                 Console.Write("Введите команду: ");
                 Console.ForegroundColor = ConsoleColor.White;
@@ -41,32 +41,67 @@ namespace PhoneBook_ConsoleInterface
                 switch (com)
                 {
                     case "1":
-                        service.AddAbonent(new Abonent{ });
+                        Console.WriteLine("Введите имя: ");
+                        string Name = Console.ReadLine();
+                        Console.WriteLine("Введите номер: ");
+                        int phoneNumber = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Введите группу: ");
+                        var category = new Category { Name = Console.ReadLine() };
+                        Console.WriteLine("Введите город: ");
+                        var city = new City { Name = Console.ReadLine() };
+                        service.AddAbonent(new Abonent{ Name = Name, phoneNumber = phoneNumber, Category = category, City = city } );
                         break;
+
                     case "2":
-                        service.DeleteAbonent();
+                        Console.WriteLine("Введите Id абонета: ");
+                        int abonentId = int.Parse(Console.ReadLine());
+                        service.DeleteAbonent(abonentId);
                         break;
-                //    case "3":
-                //        pb.ModifyAbonent();
-                //        break;
+
+                    case "3":
+                        Console.WriteLine("Введите Id абонета: ");
+                        int Id = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Введите имя: ");
+                        string newName = Console.ReadLine();
+                        Console.WriteLine("Введите номер: ");
+                        int newPhoneNumber = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Введите группу: ");
+                        var newCategory = new Category { Name = Console.ReadLine() };
+                        Console.WriteLine("Введите город: ");
+                        var newCity = new City { Name = Console.ReadLine() };
+                        service.ModifyAbonent(Id, new Abonent { Name = newName, phoneNumber = newPhoneNumber, Category = newCategory, City = newCity });
+                        break;
+
                     case "4":
-                        Console.WriteLine("Введите имя абонента: ");
-                        string s = Console.ReadLine();
-                        Console.WriteLine("Результаты поиска:");
+                        Console.WriteLine("Введите часть имени абонента или номер: ");
+                        string s = Console.ReadLine();                      
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine((new string('=', 79)));
+                        Console.WriteLine("\t\tПростой консольный справочник на C#");
+                        Console.WriteLine((new string('=', 79)));
+                        Console.WriteLine("\n");
+                        Console.WriteLine("Результаты поиска:\n");
+                        Console.ForegroundColor = ConsoleColor.White;
                         foreach (var abonent in service.SearchAbonent(s))
                         {
                             Console.WriteLine(abonent);
                         }
+                        Console.WriteLine("\n");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Для возврата к основному меню нажмите любую клавишу...");
                         Console.ReadKey();
                         break;
-                //    case "5":
-                //pb.SaveAbonentsToXml();
-                //return;
-                //    case "6":
-                //return;
-                default:
-                Console.WriteLine("Недопустимая команда.\n");
-                break;
+
+                    case "5":
+                        service.DeleteDb();
+                        break;
+
+                    case "6":
+                        return;
+                        default:
+                        Console.WriteLine("Недопустимая команда.\n");
+                        break;
                 }
             }
         }

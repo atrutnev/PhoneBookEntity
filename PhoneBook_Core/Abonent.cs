@@ -20,7 +20,7 @@ namespace PhoneBook_Core
 
         public override string ToString()
         {
-            return String.Format("\t{1} - {2} [ Id: {0}, Группа: {3}, Город: {4} ]", Id, Name, phoneNumber, Category.Name, City.Name);
+            return String.Format("\tАбонент: {1} - {2} [ Id: {0}, Группа: {3}, Город: {4} ]", Id, Name, phoneNumber, Category.Name, City.Name);
         }
     }
 }
