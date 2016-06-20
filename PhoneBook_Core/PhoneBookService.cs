@@ -26,7 +26,7 @@ namespace PhoneBook_Core
         public void DeleteAbonent(int abonentId)
         {
             var db = new PhoneBookContext();
-            var abonent = db.People.SingleOrDefault(p => p.Id == abonentId);
+            var abonent = db.People.SingleOrDefault(a => a.Id == abonentId);
             if (abonent != null)
             {
                 db.People.Remove(abonent);
@@ -38,7 +38,7 @@ namespace PhoneBook_Core
         public void ModifyAbonent(int abonentId, Abonent abonent)
         {
             var db = new PhoneBookContext();
-            var oldAbonent = db.People.Single(p => p.Id == abonentId);
+            var oldAbonent = db.People.Single(a => a.Id == abonentId);
             oldAbonent.Name = abonent.Name;
             oldAbonent.phoneNumber = abonent.phoneNumber;
             oldAbonent.Category = abonent.Category;
@@ -47,10 +47,11 @@ namespace PhoneBook_Core
         }
 
         //Метод формирования списка абонентов
-        public IEnumerable<Abonent> GetPeople()
+        public IEnumerable<Abonent> GetPeopleSort()
         {
             var db = new PhoneBookContext();
-            return db.People.Include("Category").Include("City");   
+            var q = db.People.Include("Category").Include("City").OrderBy(a => a.Name);
+            return q;
         }
 
 
@@ -65,14 +66,14 @@ namespace PhoneBook_Core
                     //Если введены буквы, то поиск производится по имени абонента. 
                     if (char.IsLetter(c))
                     {
-                        var q = db.People.Where(p => p.Name.Contains(s)).Include("Category").Include("City");
+                        var q = db.People.Where(a => a.Name.Contains(s)).Include("Category").Include("City");
                         return q;
                     }
                     //Если введены цифры, то поиск производится по номеру абонента.
                     else if (char.IsDigit(c))
                     {
                         var number = int.Parse(s);
-                        var q = db.People.Where(p => p.phoneNumber.Equals(number)).Include("Category").Include("City");
+                        var q = db.People.Where(a => a.phoneNumber.Equals(number)).Include("Category").Include("City");
                         return q;
                     }
                     else
@@ -82,9 +83,16 @@ namespace PhoneBook_Core
                     }
                 }
             }
-            return GetPeople();
+            return GetPeopleSort();
         }
 
+
+        public Abonent GetAbonent(int id)
+        {
+            var db = new PhoneBookContext();
+            var q = db.People.Include("Category").Include("City").Single(a => a.Id == id);
+            return q;
+        }
 
         //Метод очистки справочника (удаление БД)
         public void DeleteDb()
@@ -95,13 +103,12 @@ namespace PhoneBook_Core
 
 
         //Метод вывода списка абонентов на экран
-        public void ListAbonents()
+        public void ListAbonentsSort()
         {
-            foreach (var a in GetPeople())
+            foreach (var a in GetPeopleSort())
             {
                 Console.WriteLine(a);
             }
         }
-
     }
 }

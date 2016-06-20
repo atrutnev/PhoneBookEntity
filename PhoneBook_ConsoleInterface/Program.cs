@@ -13,6 +13,7 @@ namespace PhoneBook_ConsoleInterface
         static void Main(string[] args)
         {
             var service = new PhoneBookService();
+            //service.DeleteDb();
             while (true)
             {
                 //Шапка
@@ -21,10 +22,10 @@ namespace PhoneBook_ConsoleInterface
                 Console.WriteLine((new string('=', 79)));
                 Console.WriteLine("\t\tПростой консольный справочник на C#");
                 Console.WriteLine((new string('=', 79)));
-                Console.WriteLine("\t\tКоличество абонентов в справочнике - {0}", service.GetPeople().Count());
+                Console.WriteLine("\t\tКоличество абонентов в справочнике - {0}", service.GetPeopleSort().Count());
                 Console.WriteLine("\n");
                 Console.ForegroundColor = ConsoleColor.White;
-                service.ListAbonents();
+                service.ListAbonentsSort();
                 Console.WriteLine("\n");
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine((new string('=', 79)));
